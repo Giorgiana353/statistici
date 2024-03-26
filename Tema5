@@ -1,0 +1,67 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Statistici {
+      
+	private double inceput;
+	private double sfarsit;
+	private int totalnr;
+	private int nrinterval;
+	
+	public Statistici ( double inceput, double sfarsit) {
+		this.inceput = inceput;
+		this.sfarsit = sfarsit;
+		this.totalnr = 0;
+		this.nrinterval =0;
+	}
+	
+	public void testare (Double nr) {
+		totalnr++;
+		if(nr >= inceput && nr <= sfarsit) {
+			nrinterval++;
+		}
+	}
+	public double procent() {
+		if(totalnr == 0) {
+			return 0;
+		}
+		else 
+		{
+			return nrinterval/totalnr*100;
+		}
+	}
+	
+	public static void main(String[] args) {
+    try {
+    	BufferedReader reader = new BufferedReader (new FileReader("intervale.dat.txt"));
+    	 List<Statistici> intervale = new ArrayList<>();
+         String line;
+         while ((line = reader.readLine()) != null) {
+                 String[] parts = line.substring(1, line.length() - 1).split(",");
+                 double inceput = Double.parseDouble(parts[0]);
+                 double sfarsit = Double.parseDouble(parts[1]);
+                 intervale.add(new Statistici(inceput, sfarsit));
+             }
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter("statistica.dat"))) {
+           String line2;
+           while ((line = reader.readLine()) != null) {
+               Double number = Double.parseDouble(line2.trim());
+               for (Statistici interval : intervale) {
+                   interval.testare(number);
+               }
+           }
+           for (Statistici interval : intervale) {
+               writer.write("Interval [" + interval.inceput + ", " + interval.sfarsit + "]: " + interval.procent() + "%\n");
+           }
+        }
+   } 
+    catch (IOException e) {
+	}
+}
+}
+
